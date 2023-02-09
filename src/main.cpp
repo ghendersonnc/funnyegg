@@ -6,7 +6,9 @@
 #include "renderer/VAO.h"
 #include "renderer/EBO.h"
 #include "renderer/Shapes.h"
+#include <filesystem>
 
+void frameBufferSizeCallback(GLFWwindow* window, int width, int height);
 
 GLfloat R = 72.0f / 255;
 GLfloat G = 47.0f / 255;
@@ -31,6 +33,7 @@ int main()
     }
     glfwMakeContextCurrent(window);
     gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
+    glfwSetFramebufferSizeCallback(window, frameBufferSizeCallback);
     Shader shader("shaders/shader.vert", "shaders/shader.frag");
 
 
@@ -67,4 +70,9 @@ int main()
     shader.kill();
     glfwDestroyWindow(window);
     glfwTerminate();
+}
+
+void frameBufferSizeCallback(GLFWwindow* window, int width, int height)
+{
+    glViewport(0, 0, width, height);
 }
