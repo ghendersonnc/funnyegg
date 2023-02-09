@@ -23,7 +23,9 @@ add_subdirectory(external/glm)
 add_library(stb_image STATIC includes/stb_image/stb_image.cpp)
 target_include_directories(stb_image PUBLIC includes/stb_image)
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+file(GLOB_RECURSE EXEC_SOURCES src/*.cpp)
+
+add_executable(${PROJECT_NAME} ${EXEC_SOURCES})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
         glad
