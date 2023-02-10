@@ -6,9 +6,8 @@
 #include "renderer/VAO.h"
 #include "renderer/EBO.h"
 #include "renderer/Shapes.h"
+#include "renderer/Window.h"
 #include <filesystem>
-
-void frameBufferSizeCallback(GLFWwindow* window, int width, int height);
 
 GLfloat R = 72.0f / 255;
 GLfloat G = 47.0f / 255;
@@ -17,25 +16,10 @@ GLfloat A = 1.0f;
 
 int main()
 {
-    if (!glfwInit())
-    {
-        std::cerr << "no glfw for u" << std::endl;
-        exit(1);
-    }
+    int x = 3;
+    Window window(640, 480);
 
-    GLFWwindow *window = glfwCreateWindow(640, 480, "FunnyEgg", nullptr, nullptr);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-    if (!window)
-    {
-        std::cerr << "no window for u" << std::endl;
-        exit(1);
-    }
-    glfwMakeContextCurrent(window);
-    gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
-    glfwSetFramebufferSizeCallback(window, frameBufferSizeCallback);
     Shader shader("shaders/shader.vert", "shaders/shader.frag");
-
 
     // Bind VAO first
     VAO vao;
@@ -48,9 +32,9 @@ int main()
     vao.unbind();
     vbo.unbind();
     ebo.unbind();
-
+    
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(window.p_Context))
     {
         glClearColor(R, G, B, A);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -60,7 +44,7 @@ int main()
         glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, nullptr);
 //        glDrawArrays(GL_TRIANGLES, 0, 3);
 
-        glfwSwapBuffers(window);
+        glfwSwapBuffers(window.p_Context);
         glfwPollEvents();
     }
 
@@ -68,11 +52,7 @@ int main()
     vbo.kill();
     ebo.kill();
     shader.kill();
-    glfwDestroyWindow(window);
+    glfwDestroyWindow(window.p_Context);
     glfwTerminate();
 }
 
-void frameBufferSizeCallback(GLFWwindow* window, int width, int height)
-{
-    glViewport(0, 0, width, height);
-}
